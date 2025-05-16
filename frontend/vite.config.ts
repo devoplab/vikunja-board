@@ -206,7 +206,8 @@ function getBuildConfig(env: Record<string, string>) {
 			extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
 		},
 		server: {
-			host: '127.0.0.1', // see: https://github.com/vitejs/vite/pull/8543
+			// host: '127.0.0.1', // see: https://github.com/vitejs/vite/pull/8543
+			host: '0.0.0.0', // listen to host ports because we are running in container
 			port: 4173,
 			strictPort: true,
 		},
