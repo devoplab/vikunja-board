@@ -8,6 +8,7 @@ config.yaml
 !.gitea/ISSUE_TEMPLATE/config.yml
 docs/themes/
 *.db
+*.db.backup*
 Run
 dist/
 cover.*
