@@ -910,8 +910,11 @@ func CreateProject(s *xorm.Session, project *Project, auth web.Auth, createBackl
 // CreateNewProjectForUser creates a new inbox project for a user. To prevent import cycles, we can't do that
 // directly in the user.Create function.
 func CreateNewProjectForUser(s *xorm.Session, u *user.User) (err error) {
+
 	p := &Project{
-		Title: "Inbox",
+		// Title: "Inbox",
+		Title:       u.Username + "'s Pipeline",
+		Description: "<h1>Procurement Pipline</h1><p>Pipeline for formulating + distributing requests and evaluate the responses.</p>",
 	}
 	err = p.Create(s, u)
 	if err != nil {

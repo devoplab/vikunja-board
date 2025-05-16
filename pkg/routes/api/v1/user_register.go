@@ -22,6 +22,7 @@ import (
 
 	"code.vikunja.io/api/pkg/config"
 	"code.vikunja.io/api/pkg/db"
+	"code.vikunja.io/api/pkg/log"
 	"code.vikunja.io/api/pkg/models"
 	"code.vikunja.io/api/pkg/user"
 	"code.vikunja.io/api/pkg/web/handler"
@@ -89,10 +90,55 @@ func RegisterUser(c echo.Context) error {
 		return handler.HandleHTTPError(err)
 	}
 
+	// Get user's first project
+	project := models.Project{}
+	res, _, _, err := project.ReadAll(s, newUser, "", 1, 20)
+	if err != nil {
+		_ = s.Rollback()
+		return handler.HandleHTTPError(err)
+	}
+
+	log.Infof("**user_register** User %s has %d projects", newUser.Username, len(res.([]*models.Project)))
+
+	projects := res.([]*models.Project)
+
+	var firstP *models.Project
+
+	for _, p := range projects {
+		if p.ID < 0 {
+			continue
+		} else {
+			firstP = p
+			break
+		}
+	}
+
+	firstT, err := models.CreateDefaultTeamForNewUser(s, newUser)
+	if err != nil {
+		_ = s.Rollback()
+		return handler.HandleHTTPError(err)
+	}
+
+	if firstP != nil {
+		projectUser := &models.TeamProject{
+			ProjectID: firstP.ID,
+			TeamID:    firstT.ID,
+			Right:     models.RightWrite,
+		}
+
+		err = projectUser.Create(s, newUser)
+		if err != nil {
+			_ = s.Rollback()
+			return handler.HandleHTTPError(err)
+		}
+
+	}
+
 	if err := s.Commit(); err != nil {
 		_ = s.Rollback()
 		return handler.HandleHTTPError(err)
 	}
 
 	return c.JSON(http.StatusOK, newUser)
+
 }

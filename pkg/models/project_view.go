@@ -310,20 +310,44 @@ func createProjectView(s *xorm.Session, p *ProjectView, a web.Auth, createBacklo
 		// Create default buckets for kanban view
 		backlog := &Bucket{
 			ProjectViewID: p.ID,
-			Title:         "To-Do",
-			Position:      100,
+			// Title:         "To-Do",
+			Title:    "Crafting",
+			Position: 100,
 		}
 		err = backlog.Create(s, a)
 		if err != nil {
 			return
 		}
 
-		doing := &Bucket{
+		doing200 := &Bucket{
 			ProjectViewID: p.ID,
-			Title:         "Doing",
-			Position:      200,
+			// Title:         "Doing",
+			Title:    "Identifing",
+			Position: 200,
 		}
-		err = doing.Create(s, a)
+		err = doing200.Create(s, a)
+		if err != nil {
+			return
+		}
+
+		// Add doing300 bucket
+		doing300 := &Bucket{
+			ProjectViewID: p.ID,
+			Title:         "Corresponding",
+			Position:      300,
+		}
+		err = doing300.Create(s, a)
+		if err != nil {
+			return
+		}
+
+		// Add doing400 bucket
+		doing400 := &Bucket{
+			ProjectViewID: p.ID,
+			Title:         "Evaluating",
+			Position:      400,
+		}
+		err = doing400.Create(s, a)
 		if err != nil {
 			return
 		}
@@ -331,7 +355,7 @@ func createProjectView(s *xorm.Session, p *ProjectView, a web.Auth, createBacklo
 		done := &Bucket{
 			ProjectViewID: p.ID,
 			Title:         "Done",
-			Position:      300,
+			Position:      900,
 		}
 		err = done.Create(s, a)
 		if err != nil {
@@ -484,11 +508,25 @@ func GetProjectViewByID(s *xorm.Session, id int64) (view *ProjectView, err error
 }
 
 func CreateDefaultViewsForProject(s *xorm.Session, project *Project, a web.Auth, createBacklogBucket bool, createDefaultListFilter bool) (err error) {
+
+	// Move kanban to the first because otherwise it will have a larger view id
+	kanban := &ProjectView{
+		ProjectID:               project.ID,
+		Title:                   "Kanban",
+		ViewKind:                ProjectViewKindKanban,
+		Position:                100,
+		BucketConfigurationMode: BucketConfigurationModeManual,
+	}
+	err = createProjectView(s, kanban, a, createBacklogBucket, true)
+	if err != nil {
+		return
+	}
+
 	list := &ProjectView{
 		ProjectID: project.ID,
 		Title:     "List",
 		ViewKind:  ProjectViewKindList,
-		Position:  100,
+		Position:  200,
 	}
 	if createDefaultListFilter {
 		list.Filter = &TaskCollection{
@@ -504,7 +542,7 @@ func CreateDefaultViewsForProject(s *xorm.Session, project *Project, a web.Auth,
 		ProjectID: project.ID,
 		Title:     "Gantt",
 		ViewKind:  ProjectViewKindGantt,
-		Position:  200,
+		Position:  300,
 	}
 	err = createProjectView(s, gantt, a, createBacklogBucket, true)
 	if err != nil {
@@ -515,30 +553,18 @@ func CreateDefaultViewsForProject(s *xorm.Session, project *Project, a web.Auth,
 		ProjectID: project.ID,
 		Title:     "Table",
 		ViewKind:  ProjectViewKindTable,
-		Position:  300,
+		Position:  400,
 	}
 	err = createProjectView(s, table, a, createBacklogBucket, true)
 	if err != nil {
 		return
 	}
 
-	kanban := &ProjectView{
-		ProjectID:               project.ID,
-		Title:                   "Kanban",
-		ViewKind:                ProjectViewKindKanban,
-		Position:                400,
-		BucketConfigurationMode: BucketConfigurationModeManual,
-	}
-	err = createProjectView(s, kanban, a, createBacklogBucket, true)
-	if err != nil {
-		return
-	}
-
 	project.Views = []*ProjectView{
+		kanban,
 		list,
 		gantt,
 		table,
-		kanban,
 	}
 
 	return
