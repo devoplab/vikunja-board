@@ -5,6 +5,7 @@
   outline: none;
 }
 
+
 a, button {
   &:focus-visible {
     box-shadow: 0 0 0 2px hsla(var(--primary-hsl), 0.5);
@@ -18,8 +19,10 @@ a, button {
 }
 
 :root {
+  --body-size: 14px;
   // Bulma sets this to "scroll" which gives us a scrollbar even if there's no content to scroll
   --body-overflow-y: auto;
+  // --body-size:var(--body-size)
 }
 
 // The LanguageTool browser plugin creates a custom element with shadow root for textareas.

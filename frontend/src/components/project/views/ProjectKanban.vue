@@ -800,9 +800,9 @@ function unCollapseBucket(bucket: IBucket) {
 
 <style lang="scss">
 $ease-out: all .3s cubic-bezier(0.23, 1, 0.32, 1);
-$bucket-width: 300px;
+$bucket-width: 220px;
 $bucket-header-height: 60px;
-$bucket-right-margin: 1rem;
+$bucket-right-margin: 0.4rem;
 
 $crazy-height-calculation: '100vh - 4.5rem - 1.5rem - 1rem - 1.5rem - 11px';
 $crazy-height-calculation-tasks: '#{$crazy-height-calculation} - 1rem - 2.5rem - 2rem - #{$button-height} - 1rem';
@@ -859,6 +859,7 @@ $filter-container-height: '1rem - #{$switch-view-height}';
 		width: $bucket-width;
 		display: flex;
 		flex-direction: column;
+		background-color: var(--grey-200);
 		overflow: hidden; // Make sure the edges are always rounded
 
 		@media screen and (max-width: $tablet) {
@@ -871,7 +872,7 @@ $filter-container-height: '1rem - #{$switch-view-height}';
 		}
 
 		.task-item {
-			background-color: var(--grey-100);
+			// background-color: var(--grey-100);
 			padding: .25rem .5rem;
 
 			&:first-of-type {
@@ -922,7 +923,7 @@ $filter-container-height: '1rem - #{$switch-view-height}';
 	}
 
 	.bucket-header {
-		background-color: var(--grey-100);
+		// background-color: var(--grey-100);
 		height: min-content;
 		display: flex;
 		align-items: center;
@@ -956,7 +957,7 @@ $filter-container-height: '1rem - #{$switch-view-height}';
 		bottom: 0;
 		height: min-content;
 		padding: .5rem;
-		background-color: var(--grey-100);
+		// background-color: var(--grey-100);
 		border-bottom-left-radius: $radius;
 		border-bottom-right-radius: $radius;
 		transform: none;

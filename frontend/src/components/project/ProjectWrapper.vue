@@ -109,6 +109,15 @@ function getViewTitle(view: IProjectView) {
 	justify-content: space-between;
 	align-items: center;	
 	gap: 1rem;
+
+	border-top-color: var(--grey-300);
+    border-top-width: 2px;
+    border-top-style: solid;
+    border-bottom-color: var(--grey-300);
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    padding-bottom: 6px;
+    padding-top: 6px;
 	
 	@media screen and (max-width: $tablet) {
 		justify-content: center;
