@@ -184,7 +184,7 @@ import {canPreview} from '@/models/attachment'
 import type {IAttachment} from '@/modelTypes/IAttachment'
 import type {ITask} from '@/modelTypes/ITask'
 
-import {useAttachmentStore} from '@/stores/attachments'
+import {useAttachmentStore, SummaryBrief} from '@/stores/attachments'
 import {formatDateSince, formatDateLong} from '@/helpers/time/formatDate'
 import {uploadFiles, generateAttachmentUrl} from '@/helpers/attachments'
 import {getHumanSize} from '@/helpers/getHumanSize'
@@ -236,11 +236,33 @@ function uploadNewAttachment() {
 		return
 	}
 
-	uploadFilesToTask(files)
+	console.log('****uploadNewAttachment*** Uploading new attachment. files.length', files.length)
+
+	const attachmentStore = useAttachmentStore()
+
+	// console.log('****uploadNewAttachment*** attachmentStore', attachmentStore)
+	console.log('**uploadNewAttachment*** attachmentStore.hasAttachments', attachmentStore.hasAttachments)
+
+	const needAi = true //!(attachmentStore.hasAttachments)
+
+	// if (!attachmentStore.hasAttachments) {
+	// 	// this is the first attachment, so we will use AI to summarize it
+
+	// }
+
+	uploadFilesToTask(files, needAi)
 }
 
-function uploadFilesToTask(files: File[] | FileList) {
-	uploadFiles(attachmentService, props.task.id, files)
+function uploadFilesToTask(files: File[] | FileList, needAi) {
+	uploadFiles(attachmentService, props.task.id, files, needAi, (url: string, summary: SummaryBrief)=>{
+		console.log('****uploadFilesToTask*** url', url)
+		console.log('****uploadFilesToTask*** summary', summary)
+
+		if (summary && summary.summary) { 
+			const task = useTaskStore()
+			task.description = summary.summary
+		}
+	})
 }
 
 const attachmentToDelete = ref<IAttachment | null>(null)

@@ -249,6 +249,12 @@ function getServeConfig(env: Record<string, string>) {
 					changeOrigin: true,
 					secure: false,
 				},
+				'/aiapi': {
+					target: env.GENAI_PROXY,
+					changeOrigin: true,
+					rewrite: (path) => path.replace(/^\/aiapi/, '/api/'),
+					secure: false,
+				}
 			}}),
 		},
 	}
