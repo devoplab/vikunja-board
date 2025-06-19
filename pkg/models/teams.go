@@ -396,3 +396,19 @@ func (t *Team) Update(s *xorm.Session, _ web.Auth) (err error) {
 
 	return
 }
+
+func CreateDefaultTeamForNewUser(s *xorm.Session, user *user.User) (t *Team, err error) {
+
+	t = &Team{
+		Name:        "Team created by " + user.Username,
+		Description: "Home team of " + user.Username,
+	}
+
+	err = t.Create(s, user)
+
+	if err != nil {
+		return t, err
+	}
+
+	return
+}

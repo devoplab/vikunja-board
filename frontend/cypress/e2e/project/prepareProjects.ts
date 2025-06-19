@@ -4,33 +4,35 @@ import {ProjectViewFactory} from "../../factories/project_view";
 
 export function createDefaultViews(projectId) {
 	ProjectViewFactory.truncate()
-	const list = ProjectViewFactory.create(1, {
-		id: 1,
-		project_id: projectId,
-		view_kind: 0,
-	}, false)
-	const gantt = ProjectViewFactory.create(1, {
-		id: 2,
-		project_id: projectId,
-		view_kind: 1,
-	}, false)
-	const table = ProjectViewFactory.create(1, {
-		id: 3,
-		project_id: projectId,
-		view_kind: 2,
-	}, false)
+
+	// moved kanban to be the first
 	const kanban = ProjectViewFactory.create(1, {
-		id: 4,
+		id: 1,
 		project_id: projectId,
 		view_kind: 3,
 		bucket_configuration_mode: 1,
 	}, false)
+	const list = ProjectViewFactory.create(1, {
+		id: 2,
+		project_id: projectId,
+		view_kind: 0,
+	}, false)
+	const gantt = ProjectViewFactory.create(1, {
+		id: 3,
+		project_id: projectId,
+		view_kind: 1,
+	}, false)
+	const table = ProjectViewFactory.create(1, {
+		id: 4,
+		project_id: projectId,
+		view_kind: 2,
+	}, false)
 
 	return [
+		kanban[0],
 		list[0],
 		gantt[0],
 		table[0],
-		kanban[0],
 	]
 }
 
